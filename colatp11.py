@@ -68,7 +68,7 @@ class Queue:
         
         self.__elements = temp_queue
 
-# Ejemplo de uso:
+
 characters_queue = Queue()
 characters_queue.arrive({'name': 'Luke Skywalker', 'planet': 'Tatooine'})
 characters_queue.arrive({'name': 'Han Solo', 'planet': 'Corellia'})
@@ -77,20 +77,20 @@ characters_queue.arrive({'name': 'Yoda', 'planet': 'Dagobah'})
 characters_queue.arrive({'name': 'Jar Jar Binks', 'planet': 'Naboo'})
 characters_queue.arrive({'name': 'Chewbacca', 'planet': 'Kashyyyk'})
 
-# a. Mostrar personajes de Alderaan, Endor y Tatooine
+# A= Mostrar personajes de Alderaan, Endor y Tatooine
 print("Personajes de Alderaan, Endor, y Tatooine:")
 characters_queue.show_by_planet(['Alderaan', 'Endor', 'Tatooine'])
 
-# b. Indicar el planeta natal de Luke Skywalker y Han Solo
+# B= Indicar el planeta natal de Luke Skywalker y Han Solo
 print("\nPlaneta natal de Luke Skywalker y Han Solo:")
 characters_queue.show_planet_by_name(['Luke Skywalker', 'Han Solo'])
 
-# c. Insertar un nuevo personaje antes del maestro Yoda
+# C= Insertar un nuevo personaje antes del maestro Yoda
 characters_queue.insert_before({'name': 'Obi-Wan Kenobi', 'planet': 'Stewjon'}, 'Yoda')
 print("\nDespués de insertar a Obi-Wan Kenobi antes de Yoda:")
 characters_queue.show_planet_by_name(['Obi-Wan Kenobi', 'Yoda'])
 
-# d. Eliminar el personaje después de Jar Jar Binks
+# D Eliminar el personaje después de Jar Jar Binks
 characters_queue.remove_after('Jar Jar Binks')
 print("\nDespués de eliminar al personaje ubicado después de Jar Jar Binks:")
 characters_queue.show_planet_by_name(['Jar Jar Binks', 'Chewbacca'])  # Chewbacca debería haber sido eliminado
