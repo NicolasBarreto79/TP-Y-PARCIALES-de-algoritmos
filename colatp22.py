@@ -70,7 +70,6 @@ class Queue:
                 return
         print("Carol Danvers no se encuentra en la cola")
 
-# Ejemplo de uso:
 mcu_queue = Queue()
 mcu_queue.arrive({'name': 'Tony Stark', 'superhero': 'Iron Man', 'gender': 'M'})
 mcu_queue.arrive({'name': 'Steve Rogers', 'superhero': 'Capitán América', 'gender': 'M'})
@@ -78,20 +77,20 @@ mcu_queue.arrive({'name': 'Natasha Romanoff', 'superhero': 'Black Widow', 'gende
 mcu_queue.arrive({'name': 'Carol Danvers', 'superhero': 'Capitana Marvel', 'gender': 'F'})
 mcu_queue.arrive({'name': 'Scott Lang', 'superhero': 'Ant-Man', 'gender': 'M'})
 
-# a. Determinar el nombre del personaje de la superhéroe Capitana Marvel
+# A= Determinar el nombre del personaje de la superhéroe Capitana Marvel
 mcu_queue.find_by_superhero_name('Capitana Marvel')
 
-# b. Mostrar los nombres de los superhéroes femeninos
+# B= Mostrar los nombres de los superhéroes femeninos
 mcu_queue.show_female_superheroes()
 
-# c. Mostrar los nombres de los personajes masculinos
+# C= Mostrar los nombres de los personajes masculinos
 mcu_queue.show_male_characters()
 
-# d. Determinar el nombre del superhéroe del personaje Scott Lang
+# D= Determinar el nombre del superhéroe del personaje Scott Lang
 mcu_queue.find_superhero_by_character('Scott Lang')
 
-# e. Mostrar todos los datos de los superhéroes o personajes cuyos nombres comienzan con 'S'
+# E= Mostrar todos los datos de los superhéroes o personajes cuyos nombres comienzan con 'S'
 mcu_queue.show_data_by_initial('S')
 
-# f. Determinar si el personaje Carol Danvers se encuentra en la cola e indicar su nombre de superhéroe
+# F= Determinar si el personaje Carol Danvers se encuentra en la cola e indicar su nombre de superhéroe
 mcu_queue.find_carol_danvers()
