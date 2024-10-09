@@ -1,0 +1,58 @@
+
+class Personaje:
+    def __init__(self, nombre, peliculas):
+        self.nombre = nombre
+        self.peliculas = peliculas
+
+
+def posicion_rocket_y_groot(pila):
+    posicion_rocket = None
+    posicion_groot = None
+    for i, personaje in enumerate(pila[::-1], start=1):
+        if personaje.nombre == 'Rocket Raccoon':
+            posicion_rocket = i
+        elif personaje.nombre == 'Groot':
+            posicion_groot = i
+    return posicion_rocket, posicion_groot
+
+
+def personajes_mas_de_5_peliculas(pila):
+    return [(personaje.nombre, personaje.peliculas) for personaje in pila if personaje.peliculas > 5]
+
+
+def peliculas_viuda_negra(pila):
+    for personaje in pila:
+        if personaje.nombre == 'Viuda Negra':
+            return personaje.peliculas
+    return 0
+
+
+def mostrar_personajes_letra(pila, letras):
+    return [personaje.nombre for personaje in pila if personaje.nombre[0] in letras]
+
+
+pila = []
+
+
+pila.append(Personaje('Iron Man', 10))
+pila.append(Personaje('Captain America', 9))
+pila.append(Personaje('Black Widow', 8))
+pila.append(Personaje('Rocket Raccoon', 6))
+pila.append(Personaje('Groot', 5))
+pila.append(Personaje('Thor', 7))
+pila.append(Personaje('Hulk', 6))
+pila.append(Personaje('Scarlet Witch', 5))
+
+
+posicion_rocket, posicion_groot = posicion_rocket_y_groot(pila)
+print("Posición de Rocket Raccoon:", posicion_rocket)
+print("Posición de Groot:", posicion_groot)
+
+
+print("Personajes que participaron en más de 5 películas:")
+print(personajes_mas_de_5_peliculas(pila))
+
+print("Número de películas en las que participó la Viuda Negra:", peliculas_viuda_negra(pila))
+
+print("Personajes cuyos nombres empiezan con C, D y G:")
+print(mostrar_personajes_letra(pila, ['C', 'D', 'G']))
