@@ -1,0 +1,28 @@
+# ejercicio n° 22
+def usar_la_fuerza(mochila, objetos_sacados=0):
+   
+    if not mochila:
+        return False, objetos_sacados
+    
+    objeto = mochila.pop(0)
+    objetos_sacados += 1
+    
+
+    if objeto == "sable de luz":
+        return True, objetos_sacados
+    
+    sable_encontrado, objetos_utilizados = usar_la_fuerza(mochila, objetos_sacados)
+    
+   
+    if sable_encontrado:
+        return True, objetos_utilizados
+    
+    return False, objetos_utilizados
+
+
+mochila = ["botiquín", "comida", "venda", "sable de luz", "agua"]
+encontrado, objetos_necesarios = usar_la_fuerza(mochila)
+if encontrado:
+    print("El sable de luz fue encontrado  después de sacar {} objetos.".format(objetos_necesarios))
+else:
+    print("El sable de luz no fue encontrado en la mochila.")
