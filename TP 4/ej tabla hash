@@ -1,0 +1,83 @@
+class Pokemon:
+    def __init__(self, numero, nombre, tipos, nivel):
+        self.numero = numero
+        self.nombre = nombre
+        self.tipos = tipos
+        self.nivel = nivel
+
+    def __str__(self):
+        return f"{self.numero}: {self.nombre} - Tipos: {', '.join(self.tipos)} - Nivel: {self.nivel}"
+
+
+class HashTable:
+    def __init__(self):
+        self.table = [[] for _ in range(10)]  
+    
+    def hash_function(self, key):
+        return key % 10  
+
+    def insert(self, key, value):|
+        index = self.hash_function(key)
+        self.table[index].append(value)
+
+    def search(self, key):
+        index = self.hash_function(key)
+        return self.table[index]
+
+tipo_hash_table = HashTable()
+ultimo_digito_hash_table = HashTable()
+nivel_hash_table = HashTable()
+
+def cargar_pokemon(numero, nombre, tipos, nivel):
+    pokemon = Pokemon(numero, nombre, tipos, nivel)
+    
+   
+    for tipo in tipos:
+        tipo_hash_table.insert(tipo, pokemon)
+   
+    ultimo_digito = numero % 10
+    ultimo_digito_hash_table.insert(ultimo_digito, pokemon)
+    
+    
+    nivel_hash_table.insert(nivel, pokemon)
+
+def buscar_por_terminacion(numero_terminacion):
+    resultados = []
+    for tabla in [ultimo_digito_hash_table, nivel_hash_table]:
+        resultados.extend(tabla.search(numero_terminacion))
+    return resultados
+
+def buscar_por_multiplo(multiplo):
+    resultados = []
+    for tabla in [nivel_hash_table]:
+        for i in range(multiplo, 10, multiplo):
+            resultados.extend(tabla.search(i))
+    return resultados
+
+def buscar_por_tipo(tipo):
+    return tipo_hash_table.search(tipo)
+
+# Ejemplo para cargar Pokémons
+cargar_pokemon(25, "Pikachu", ["Electrifico"], 30)
+cargar_pokemon(143, "Snorlax", ["Normal"], 50)
+cargar_pokemon(130, "Gyarados", ["Agua", "Volador"], 45)
+cargar_pokemon(486, "Regigigas", ["Normal"], 70)
+
+# Ejemplo de búsqueda según las condiciones especificadas
+print("Pokémons cuyos números terminan en 3, 7 y 9:")
+for num in [3, 7, 9]:
+    pokemones = buscar_por_terminacion(num)
+    for pokemon in pokemones:
+        print(pokemon)
+
+print("\nPokémons cuyos niveles son múltiplos de 2, 5 y 10:")
+for multiplo in [2, 5, 10]:
+    pokemones = buscar_por_multiplo(multiplo)
+    for pokemon in pokemones:
+        print(pokemon)
+
+print("\nPokémons de los tipos: Acero, Fuego, Electrifico, Hielo:")
+for tipo in ["Acero", "Fuego", "Electrifico", "Hielo"]:
+    pokemones = buscar_por_tipo(tipo)
+    for pokemon in pokemones:
+        print(pokemon)
