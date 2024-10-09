@@ -1,1 +1,59 @@
+class Stack:
+    def __init__(self):
+        self.items = []
 
+    def is_empty(self):
+        return self.items == []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+        return None
+
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1]
+        return None
+
+    def size(self):
+        return len(self.items)
+
+    def __iter__(self):
+        return iter(self.items)
+
+
+The_empire_strikes_back = Stack()
+The_force_awakens = Stack()
+
+The_empire_strikes_back.push("Luke Skywalker")
+The_empire_strikes_back.push("Han Solo")
+The_empire_strikes_back.push("Leia Organa")
+The_empire_strikes_back.push("Darth Vader")
+The_empire_strikes_back.push("Yoda")
+
+The_force_awakens.push("Rey")
+The_force_awakens.push("Finn")
+The_force_awakens.push("Han Solo")
+The_force_awakens.push("Leia Organa")
+The_force_awakens.push("Kylo Ren")
+
+def intersection(stack1, stack2):
+    set1 = set(stack1)
+    
+    intersection_stack = Stack()
+
+    for item in stack2:
+       
+        if item in set1:
+            intersection_stack.push(item)
+
+    return intersection_stack
+
+intersection_personajes= intersection(The_empire_strikes_back, The_force_awakens)
+
+print("Personajes que aparecen en ambos episodios:")
+while not intersection_personajes.is_empty():
+    print(intersection_personajes.pop())
