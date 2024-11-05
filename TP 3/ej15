@@ -1,0 +1,113 @@
+entrenadores_pokemon = [
+    {
+        'nombre': 'Ash',
+        'torneos_ganados': 5,
+        'batallas_perdidas': 20,
+        'batallas_ganadas': 80,
+        'pokemons': [
+            {'nombre': 'Pikachu', 'nivel': 90, 'tipo': 'Eléctrico', 'subtipo': None},
+            {'nombre': 'Charizard', 'nivel': 85, 'tipo': 'Fuego', 'subtipo': 'Volador'},
+        ]
+    },
+    {
+        'nombre': 'Brock',
+        'torneos_ganados': 2,
+        'batallas_perdidas': 15,
+        'batallas_ganadas': 45,
+        'pokemons': [
+            {'nombre': 'Onix', 'nivel': 70, 'tipo': 'Roca', 'subtipo': 'Tierra'},
+            {'nombre': 'Geodude', 'nivel': 40, 'tipo': 'Roca', 'subtipo': 'Tierra'},
+        ]
+    },
+    
+]
+
+# Función para obtener la cantidad de Pokémons de un determinado entrenador
+def cantidad_pokemons(entrenador):
+    return len(entrenador['pokemons'])
+
+# Función para listar entrenadores con más de 3 torneos ganados
+def entrenadores_mas_de_tres_torneos(entrenadores):
+    return [entrenador for entrenador in entrenadores if entrenador['torneos_ganados'] > 3]
+
+# Función para obtener el Pokémon de mayor nivel del entrenador con más torneos ganados
+def pokemon_mayor_nivel_entrenador_con_mas_torneos(entrenadores):
+    entrenador = max(entrenadores, key=lambda x: x['torneos_ganados'])
+    return max(entrenador['pokemons'], key=lambda x: x['nivel'])
+
+# Función para mostrar todos los datos de un entrenador y sus Pokémons
+def mostrar_entrenador_y_pokemons(entrenador):
+    print(f"Entrenador: {entrenador['nombre']}")
+    print(f"Torneos ganados: {entrenador['torneos_ganados']}")
+    print(f"Batallas ganadas: {entrenador['batallas_ganadas']}")
+    print(f"Batallas perdidas: {entrenador['batallas_perdidas']}")
+    print("Pokémons:")
+    for pokemon in entrenador['pokemons']:
+        print(f" - {pokemon['nombre']}, Nivel: {pokemon['nivel']}, Tipo: {pokemon['tipo']}, Subtipo: {pokemon['subtipo']}")
+
+# Función para obtener entrenadores con porcentaje de batallas ganadas > 79%
+def entrenadores_porcentaje_batallas_mayor_79(entrenadores):
+    return [entrenador for entrenador in entrenadores if (entrenador['batallas_ganadas'] / (entrenador['batallas_ganadas'] + entrenador['batallas_perdidas'])) > 0.79]
+
+# Función para entrenadores con Pokémon de tipo fuego y planta o agua/volador
+def entrenadores_tipo_especifico(entrenadores):
+    result = []
+    for entrenador in entrenadores:
+        for pokemon in entrenador['pokemons']:
+            if (pokemon['tipo'] == 'Fuego' and pokemon['subtipo'] == 'Planta') or (pokemon['tipo'] == 'Agua' and pokemon['subtipo'] == 'Volador'):
+                result.append(entrenador)
+                break
+    return result
+
+# Función para calcular el promedio de nivel de los Pokémons de un entrenador
+def promedio_nivel_pokemons(entrenador):
+    niveles = [pokemon['nivel'] for pokemon in entrenador['pokemons']]
+    return sum(niveles) / len(niveles) if niveles else 0
+
+# Función para determinar cuántos entrenadores tienen un Pokémon específico
+def entrenadores_con_pokemon(entrenadores, nombre_pokemon):
+    return [entrenador['nombre'] for entrenador in entrenadores if any(pokemon['nombre'] == nombre_pokemon for pokemon in entrenador['pokemons'])]
+
+# Función para mostrar entrenadores con Pokémons repetidos
+def entrenadores_con_pokemons_repetidos(entrenadores):
+    result = []
+    for entrenador in entrenadores:
+        nombres_pokemons = [pokemon['nombre'] for pokemon in entrenador['pokemons']]
+        if len(nombres_pokemons) != len(set(nombres_pokemons)):
+            result.append(entrenador['nombre'])
+    return result
+
+# Función para determinar entrenadores que tienen ciertos Pokémon específicos
+def entrenadores_con_pokemon_especificos(entrenadores):
+    pokemons_buscados = {'Tyrantrum', 'Terrakion', 'Wingull'}
+    result = []
+    for entrenador in entrenadores:
+        if any(pokemon['nombre'] in pokemons_buscados for pokemon in entrenador['pokemons']):
+            result.append(entrenador['nombre'])
+    return result
+
+# Función para verificar si un entrenador tiene un Pokémon específico
+def entrenador_tiene_pokemon(entrenadores, nombre_entrenador, nombre_pokemon):
+    for entrenador in entrenadores:
+        if entrenador['nombre'] == nombre_entrenador:
+            for pokemon in entrenador['pokemons']:
+                if pokemon['nombre'] == nombre_pokemon:
+                    print(f"{nombre_entrenador} tiene a {nombre_pokemon}")
+                    print(f"Entrenador: {entrenador}")
+                    print(f"Pokémon: {pokemon}")
+                    return
+            print(f"{nombre_entrenador} no tiene a {nombre_pokemon}")
+            return
+    print(f"Entrenador {nombre_entrenador} no encontrado")
+
+print(cantidad_pokemons(entrenadores_pokemon[0]))
+print(entrenadores_mas_de_tres_torneos(entrenadores_pokemon))
+print(pokemon_mayor_nivel_entrenador_con_mas_torneos(entrenadores_pokemon))
+mostrar_entrenador_y_pokemons(entrenadores_pokemon[0])
+print(entrenadores_porcentaje_batallas_mayor_79(entrenadores_pokemon))
+print(entrenadores_tipo_especifico(entrenadores_pokemon))
+print(promedio_nivel_pokemons(entrenadores_pokemon[0]))
+print(entrenadores_con_pokemon(entrenadores_pokemon, 'Pikachu'))
+print(entrenadores_con_pokemons_repetidos(entrenadores_pokemon))
+print(entrenadores_con_pokemon_especificos(entrenadores_pokemon))
+entrenador_tiene_pokemon(entrenadores_pokemon, 'Ash', 'Pikachu')
