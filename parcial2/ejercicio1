@@ -1,0 +1,75 @@
+from arbol_avl import BinaryTree
+
+# Cargar datos de Pokémon
+pokemons_by_name = BinaryTree()
+pokemons_by_number = BinaryTree()
+pokemons_by_type = BinaryTree()
+
+pokemon_data = [
+    {'name': 'Bulbasaur', 'number': 1, 'type': ['Planta', 'Veneno']},
+    {'name': 'Charmander', 'number': 4, 'type': ['Fuego']},
+    {'name': 'Squirtle', 'number': 7, 'type': ['Agua']},
+    {'name': 'Pikachu', 'number': 3, 'type': ['Eléctrico']},
+    {'name': 'Steelix', 'number': 5, 'type': ['Acero']},
+]
+
+for pokemon in pokemon_data:
+    pokemons_by_name.insert_node(pokemon['name'], pokemon)
+    pokemons_by_number.insert_node(pokemon['number'], pokemon)
+    for t in pokemon['type']:
+        pokemons_by_type.insert_node(t, pokemon)
+
+
+# a) Mostrar todos los datos de un Pokémon por número y búsqueda aproximada por nombre
+def show_pokemon_data_by_number(number):
+    result = pokemons_by_number.search(number)
+    if result:
+        print(result.data)
+    else:
+        print("No se encontró el Pokémon con ese número.")
+
+def show_pokemon_data_by_name_approx(name_fragment):
+    print(f"Pokémons que contienen '{name_fragment}':")
+    pokemons_by_name.proximity_search(name_fragment)
+
+# b) Mostrar todos los nombres de Pokémons de un determinado tipo
+def show_pokemons_by_type(pokemon_type):
+    print(f"Pokémons de tipo {pokemon_type}:")
+    pokemons_by_type.proximity_search(pokemon_type)
+    
+
+
+# c) Listado en orden ascendente por número y nombre de Pokémon
+print(" Listado en orden ascendente por número:")
+pokemons_by_number.inorden()
+
+print("Listado por nombre:")
+pokemons_by_name.inorden()
+
+# d) Listado por nivel por nombre
+print(" Listado por nivel por nombre:")
+pokemons_by_name.by_level()
+
+#  e) Mostrar datos de los Pokémons específicos
+def show_specific_pokemons(names):
+    for name in names:
+        result = pokemons_by_name.search(name)
+        if result:
+            print(result.data)
+        else:
+            print(f"No se encontró el Pokémon {name}.")
+            
+specific_pokemons = ['Jolteon', 'Lycanroc', 'Tyrantrum']
+show_specific_pokemons(['Jolteon', 'Lycanroc', 'Tyrantrum'])
+
+
+# f) Contar Pokémons de tipo eléctrico y acero
+def count_pokemons_by_type(types):
+    counts = {t: 0 for t in types}
+    for t in types:
+        result = pokemons_by_type.search(t)
+        if result:
+            counts[t] += 1
+    print("Conteo de Pokémons por tipo:", counts)
+
+count_pokemons_by_type(['Eléctrico', 'Acero'])
