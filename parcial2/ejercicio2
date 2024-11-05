@@ -1,0 +1,188 @@
+from cola import Queue
+from heap import HeapMin
+from pila import Stack
+
+
+class Graph:
+    def __init__(self, dirigido=True):
+        self.elements = []
+        self.dirigido = dirigido
+
+    def show_graph(self):
+        print()
+        print("Nodos")
+        for index, nodo in enumerate(self.elements):
+            print(f"{nodo['value']}")
+            print(f"  Aristas")
+            for second_index, second_element in enumerate(nodo['aristas']):
+                print(f"    Destino: {second_element['value']} Peso: {second_element['peso']}")
+        print()
+
+    def search(self, value):
+        for index, element in enumerate(self.elements):
+            if element['value'] == value:
+                return index
+        return None
+
+    def insert_vertice(self, value):
+        nodo = {
+            'value': value,
+            'aristas': [],
+            'visitado': False,
+        }
+        self.elements.append(nodo)
+
+    def insert_arista(self, origen, destino, peso):
+        pos_origen = self.search(origen)
+        pos_destino = self.search(destino)
+        if pos_origen is not None and pos_destino is not None:
+            arista = {'value': destino, 'peso': peso}
+            self.elements[pos_origen]['aristas'].append(arista)
+            if not self.dirigido:
+                arista = {'value': origen, 'peso': peso}
+                self.elements[pos_destino]['aristas'].append(arista)
+
+    def delete_arista(self, origen, destino):
+        result = self.search_arista(origen, destino)
+        if result:
+            pos_vertice, pos_arista = result
+            self.elements[pos_vertice]['aristas'].pop(pos_arista)
+            if not self.dirigido:
+                result = self.search_arista(destino, origen)
+                if result:
+                    pos_vertice, pos_arista = result
+                    self.elements[pos_vertice]['aristas'].pop(pos_arista)
+
+    def search_arista(self, vertice_value, value):
+        pos_origen = self.search(vertice_value)
+        if pos_origen is not None:
+            for index, element in enumerate(self.elements[pos_origen]['aristas']):
+                if element['value'] == value:
+                    return pos_origen, index
+        return None
+
+    def mark_as_not_visited(self):
+        for nodo in self.elements:
+            nodo['visitado'] = False
+
+    def deep_show(self, origin):
+        def __deep_show(graph, origin):
+            pos_vertice = graph.search(origin)
+            if pos_vertice is not None:
+                if not graph.elements[pos_vertice]['visitado']:
+                    graph.elements[pos_vertice]['visitado'] = True
+                    print(graph.elements[pos_vertice]['value'])
+                    adyacentes = graph.elements[pos_vertice]['aristas']
+                    for adyacente in adyacentes:
+                        __deep_show(graph, adyacente['value'])
+
+        self.mark_as_not_visited()
+        __deep_show(self, origin)
+
+    def amplitude_show(self, origin):
+        self.mark_as_not_visited()
+        cola = Queue()
+        pos_vertice = self.search(origin)
+        if pos_vertice is not None:
+            if not self.elements[pos_vertice]['visitado']:
+                cola.arrive(self.elements[pos_vertice])
+                while cola.size() > 0:
+                    nodo = cola.attention()
+                    nodo['visitado'] = True
+                    print(nodo['value'])
+                    adyacentes = nodo['aristas']
+                    for adyacente in adyacentes:
+                        pos_adyaecnte = self.search(adyacente['value'])
+                        if not self.elements[pos_adyaecnte]['visitado']:
+                            cola.arrive(self.elements[pos_adyaecnte])
+
+    def dijkstra(self, origen):
+        from math import inf
+        no_visitados = HeapMin()
+        for nodo in self.elements:
+            distancia = 0 if nodo['value'] == origen else inf
+            no_visitados.arrive([distancia, nodo])
+
+        while len(no_visitados.elements) > 0:
+            nodo = no_visitados.atention()
+            adyacentes = nodo[1]['aristas']
+            for adyacente in adyacentes:
+                pos = no_visitados.search(adyacente['value'])
+                if pos is not None:
+                    nuevo_costo = nodo[0] + adyacente['peso']
+                    if nuevo_costo < no_visitados.elements[pos][0]:
+                        no_visitados.elements[pos][0] = nuevo_costo
+                        no_visitados.change_proirity(pos, nuevo_costo)
+        return no_visitados
+
+    def kruskal(self):
+        from heap import HeapMin
+        bosque = []
+        aristas = HeapMin()
+
+        for nodo in self.elements:
+            for adyacente in nodo['aristas']:
+                aristas.arrive([nodo['value'], adyacente['value']], adyacente['peso'])
+
+        while len(bosque) < len(self.elements) - 1 and len(aristas.elements) > 0:
+            arista = aristas.atention()
+            origen = arista[1][0]
+            destino = arista[1][1]
+
+            if origen not in bosque or destino not in bosque:
+                bosque.append(arista[1])
+
+        return bosque
+
+    def max_episodio_compartido(self):
+        max_episodio = -1
+        personajes = ()
+        for nodo in self.elements:
+            for adyacente in nodo['aristas']:
+                if adyacente['peso'] > max_episodio:
+                    max_episodio = adyacente['peso']
+                    personajes = (nodo['value'], adyacente['value'])
+        return max_episodio, personajes
+
+
+# Crear el grafo y agregar personajes
+grafo = Graph(dirigido=False)
+
+# Agregar personajes
+personajes = [
+    "Luke Skywalker", "Darth Vader", "Yoda", "Boba Fett", "C-3PO",
+    "Leia", "Rey", "Kylo Ren", "Chewbacca", "Han Solo", "R2-D2", "BB-8"
+]
+
+for personaje in personajes:
+    grafo.insert_vertice(personaje)
+
+# Insertar aristas con el número de episodios compartidos
+grafo.insert_arista("Luke Skywalker", "Han Solo", 2)
+grafo.insert_arista("Luke Skywalker", "Leia", 5)
+grafo.insert_arista("Leia", "Han Solo", 4)
+grafo.insert_arista("Yoda", "Luke Skywalker", 2)
+grafo.insert_arista("Yoda", "Leia", 1)
+grafo.insert_arista("Darth Vader", "Luke Skywalker", 6)
+grafo.insert_arista("Chewbacca", "Han Solo", 4)
+grafo.insert_arista("Kylo Ren", "Rey", 3)
+grafo.insert_arista("Boba Fett", "C-3PO", 2)
+grafo.insert_arista("R2-D2", "BB-8", 2)
+
+# Mostrar el grafo
+grafo.show_graph()
+
+# b) Hallar el árbol de expansión mínimo 
+arbol_expansion_minimo = grafo.kruskal()
+print("Árbol de Expansión Mínimo:")
+for arista in arbol_expansion_minimo:
+    print(arista)
+
+# Verificar si Yoda está en el árbol de expansión mínimo
+yoda_en_arbol = any('Yoda' in arista for arista in arbol_expansion_minimo)
+print("\n¿Yoda está en el árbol de expansión mínimo?", yoda_en_arbol)
+
+# c) Determinar cuál es el número máximo de episodios que comparten dos personajes
+max_episodio, personajes_max = grafo.max_episodio_compartido()
+print(f"\nMáximo número de episodios compartidos: {max_episodio} entre {personajes_max}")
+
