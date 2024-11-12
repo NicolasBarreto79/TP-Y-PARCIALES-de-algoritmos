@@ -1,0 +1,114 @@
+from grafo import Graph
+
+grafo_maravillas = Graph(dirigido=False)
+#a-
+maravillas = [
+    {"nombre": "Chichen Itza", "pais": ["México"], "tipo": "arquitectónica"},
+    {"nombre": "Cristo Redentor", "pais": ["Brasil"], "tipo": "arquitectónica"},
+    {"nombre": "Machu Picchu", "pais": ["Perú"], "tipo": "arquitectónica"},
+    {"nombre": "Coliseo Romano", "pais": ["Italia"], "tipo": "arquitectónica"},
+    {"nombre": "Taj Mahal", "pais": ["India"], "tipo": "arquitectónica"},
+    {"nombre": "Ciudadela de Petra", "pais": ["Jordania"], "tipo": "arquitectónica"},
+    {"nombre": "Gran Muralla", "pais": ["China"], "tipo": "arquitectónica"},
+    {"nombre": "Amazonas", "pais": ["Brasil", "Perú", "Colombia"], "tipo": "natural"},
+    {"nombre": "Parque Nacional del Serengeti", "pais": ["Tanzania"], "tipo": "natural"},
+    {"nombre": "Cataratas Victoria", "pais": ["Zambia", "Zimbabue"], "tipo": "natural"},
+    {"nombre": "Isla Galápagos", "pais": ["Ecuador"], "tipo": "natural"},
+    {"nombre": "Komodo", "pais": ["Indonesia"], "tipo": "natural"},
+    {"nombre": "Parque Nacional Yosemite", "pais": ["Estados Unidos"], "tipo": "natural"},
+    {"nombre": "Monte Kilimanjaro", "pais": ["Tanzania"], "tipo": "natural"}
+]
+
+# Agregamos las maravillas como vértices en el grafo
+for maravilla in maravillas:
+    grafo_maravillas.insert_vertice(maravilla["nombre"])
+
+#b- Agregar aristas con distancias (conexiones entre maravillas de mismo tipo)
+distancias_arquitectonicas = [
+    ("Chichen Itza", "Cristo Redentor", 2000),
+    ("Chichen Itza", "Machu Picchu", 4000),
+    ("Chichen Itza", "Coliseo Romano", 8000),
+    ("Chichen Itza", "Taj Mahal", 15000),
+    ("Chichen Itza", "Ciudadela de Petra", 13000),
+    ("Chichen Itza", "Gran Muralla", 12000),
+    ("Cristo Redentor", "Machu Picchu", 3500),
+    ("Cristo Redentor", "Coliseo Romano", 9400),
+    ("Cristo Redentor", "Taj Mahal", 13900),
+    ("Cristo Redentor", "Ciudadela de Petra", 11100),
+    ("Cristo Redentor", "Gran Muralla", 17500),
+    ("Machu Picchu", "Coliseo Romano", 10700),
+    ("Machu Picchu", "Taj Mahal", 15000),
+    ("Machu Picchu", "Ciudadela de Petra", 14500),
+    ("Machu Picchu", "Gran Muralla", 16500),
+    ("Coliseo Romano", "Taj Mahal", 6700),
+    ("Coliseo Romano", "Ciudadela de Petra", 2500),
+    ("Coliseo Romano", "Gran Muralla", 8000),
+    ("Taj Mahal", "Ciudadela de Petra", 4300),
+    ("Taj Mahal", "Gran Muralla", 5000),
+    ("Ciudadela de Petra", "Gran Muralla", 4900),
+]
+
+distancias_naturales = [
+    ("Amazonas", "Parque Nacional del Serengeti", 14000),
+    ("Amazonas", "Cataratas Victoria", 14000),
+    ("Amazonas", "Isla Galápagos", 1700),
+    ("Amazonas", "Komodo", 18000),
+    ("Amazonas", "Parque Nacional Yosemite", 12000),
+    ("Amazonas", "Monte Kilimanjaro", 16000),
+    ("Parque Nacional del Serengeti", "Cataratas Victoria", 800),
+    ("Parque Nacional del Serengeti", "Isla Galápagos", 13000),
+    ("Parque Nacional del Serengeti", "Komodo", 4000),
+    ("Parque Nacional del Serengeti", "Parque Nacional Yosemite", 11500),
+    ("Parque Nacional del Serengeti", "Monte Kilimanjaro", 900),
+    ("Cataratas Victoria", "Isla Galápagos", 13000),
+    ("Cataratas Victoria", "Komodo", 15000),
+    ("Cataratas Victoria", "Parque Nacional Yosemite", 14000),
+    ("Cataratas Victoria", "Monte Kilimanjaro", 400),
+    ("Isla Galápagos", "Komodo", 8500),
+    ("Isla Galápagos", "Parque Nacional Yosemite", 9500),
+    ("Isla Galápagos", "Monte Kilimanjaro", 13500),
+    ("Komodo", "Parque Nacional Yosemite", 7000),
+    ("Komodo", "Monte Kilimanjaro", 7500),
+    ("Parque Nacional Yosemite", "Monte Kilimanjaro", 13000),
+]
+
+# Agregar las aristas en el grafo
+for origen, destino, distancia in distancias_arquitectonicas + distancias_naturales:
+    grafo_maravillas.insert_arista(origen, destino, distancia)
+
+#c-
+def arbol_minimo_por_tipo(tipo):
+    vertices_tipo = [v for v in maravillas if v["tipo"] == tipo]
+    return grafo_maravillas.kruskal(vertices_tipo[0]["nombre"])
+
+arbol_minimo_arquitectonico = arbol_minimo_por_tipo("arquitectónica")
+arbol_minimo_natural = arbol_minimo_por_tipo("natural")
+
+#d-
+def paises_con_dos_tipos():
+    paises_arquitectonicos = {pais for m in maravillas if m["tipo"] == "arquitectónica" for pais in m["pais"]}
+    paises_naturales = {pais for m in maravillas if m["tipo"] == "natural" for pais in m["pais"]}
+    return paises_arquitectonicos.intersection(paises_naturales)
+
+paises_con_ambos_tipos = paises_con_dos_tipos()
+
+#e-
+def paises_con_multiples_maravillas(tipo):
+    contador = {}
+    for m in maravillas:
+        if m["tipo"] == tipo:
+            for pais in m["pais"]:
+                if pais in contador:
+                    contador[pais] += 1
+                else:
+                    contador[pais] = 1
+    return [pais for pais, count in contador.items() if count > 1]
+
+paises_multiples_arquitectonicas = paises_con_multiples_maravillas("arquitectónica")
+paises_multiples_naturales = paises_con_multiples_maravillas("natural")
+
+print("c) Árbol de expansion minima arquitectonico:", arbol_minimo_arquitectonico)
+print("c) Árbol de expansion minima natural:", arbol_minimo_natural)
+print("d) Paises con maravillas de ambos tipos:", paises_con_ambos_tipos)
+print("e) Paises con multiples maravillas arquitectonicas:", paises_multiples_arquitectonicas)
+print("e) Paises con multiples maravillas naturales:", paises_multiples_naturales)
